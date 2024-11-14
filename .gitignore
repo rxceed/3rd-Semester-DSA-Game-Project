@@ -1,0 +1,8 @@
+#CMake out folder
+out/
+
+#VSCode folder
+.vscode/
+
+#CMakePreset
+CMakePresets.json
