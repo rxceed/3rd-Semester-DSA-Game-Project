@@ -1,5 +1,11 @@
 #include <iostream>
 #include "raylib.h"
+#include "Entity.h"
+
+#define RAYGUI_IMPLEMENTATION
+#include "raygui.h"
+
+using namespace std;
 
 int main(int, char**){
     InitWindow(800, 800, "test");
@@ -7,6 +13,6 @@ int main(int, char**){
     {
         BeginDrawing();
         ClearBackground(WHITE);
-        EndDrawing();
+        
     }
 }
