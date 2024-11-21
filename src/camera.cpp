@@ -1,6 +1,8 @@
+#include <math.h>
 #include "raylib.h"
 #include "camera.h"
 #include "entity.h"
+#include "settings.h"
 
 PlayerCamera::PlayerCamera(Entity& target)
 {
@@ -56,6 +58,12 @@ float PlayerCamera::GetZoom()
 void PlayerCamera::update()
 {
     //camera.target = TargetEntity->GetPosition();
+    if(int(fabs(camera.target.x - TargetEntity->GetPosition().x)) >= WINDOW_WIDTH/2)
+    {
+        camera.target.x += TargetEntity->GetSpeed();
+    }
+
+
     if(!TargetEntity->IsMoving(GENERAL))
     {
         if(camera.target.x < TargetEntity->GetPosition().x)
