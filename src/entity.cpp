@@ -1,5 +1,5 @@
 #include "raylib.h"
-#include "Entity.h"
+#include "entity.h"
 
 //Entity Class Implementation
 Entity::Entity(float health, Vector2 position, float speed, float defense, float attack)
@@ -12,7 +12,7 @@ Entity::Entity(float health, Vector2 position, float speed, float defense, float
 }
 Entity::~Entity()
 {
-    
+
 }
 
 void Entity::SetHealth(float val)
@@ -36,7 +36,7 @@ void Entity::SetAttack(float val)
     attack = val;
 }
 
-void Entity::Draw()
+void Entity::draw()
 {
     
 }

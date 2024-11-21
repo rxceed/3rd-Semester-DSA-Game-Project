@@ -4,8 +4,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 add_subdirectory(src)
 
-
-add_executable(build main.cpp "src/Entity.cpp")
+file(GLOB_RECURSE SOURCE_FILE ${PROJECT_SOURCE_DIR}/src/*.cpp)
+add_executable(build main.cpp ${SOURCE_FILE})
 
 # Dependencies
 set(RAYLIB_VERSION 5.0)

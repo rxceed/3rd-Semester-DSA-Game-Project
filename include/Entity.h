@@ -19,7 +19,7 @@ public:
     void SetPosition(Vector2 value);    //Set position value
     void SetDefense(float value);
     void SetAttack(float value);
-    void Draw();
+    void draw();
 
     float GetHealth();
     float GetSpeed();
@@ -35,7 +35,13 @@ public:
 
 class Player:public Entity
 {
+    public:
+    Player(Vector2 position);
+    ~Player();
+    void update();
+    void DetectInput();
 
+    void draw();
 };
 
 
