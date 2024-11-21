@@ -3,14 +3,27 @@
 
 #include "raylib.h"
 
+
+enum Direction
+{
+    GENERAL, UP, DOWN, RIGHT, LEFT
+};
+
 class Entity
 {
 protected:
     Vector2 position;
+    Vector2 PreviousPosition;
     float health;
     float speed;
     float defense;
     float attack;
+
+    bool MovingUp = false;
+    bool MovingDown = false;
+    bool MovingLeft = false;
+    bool MovingRight = false;
+
 public:
     Entity(float health, Vector2 position, float speed, float defense, float attack);
     ~Entity();
@@ -31,6 +44,11 @@ public:
     void MoveDown();
     void MoveRight();
     void MoveLeft();
+
+    void RecordPosition();
+    void DetectMovement();
+
+    bool IsMoving(int direction);
 };
 
 class Player:public Entity

@@ -55,6 +55,25 @@ float PlayerCamera::GetZoom()
 }
 void PlayerCamera::update()
 {
-    camera.target = TargetEntity->GetPosition();
-    
+    //camera.target = TargetEntity->GetPosition();
+    if(!TargetEntity->IsMoving(GENERAL))
+    {
+        if(camera.target.x < TargetEntity->GetPosition().x)
+        {
+            camera.target.x += 0.5;
+        }
+        else if(camera.target.x > TargetEntity->GetPosition().x)
+        {
+            camera.target.x -= 0.5;
+        }
+
+        if(camera.target.y < TargetEntity->GetPosition().y)
+        {
+            camera.target.y += 0.5;
+        }
+        else if(camera.target.y > TargetEntity->GetPosition().y)
+        {
+            camera.target.y -= 0.5;
+        }
+    }
 }

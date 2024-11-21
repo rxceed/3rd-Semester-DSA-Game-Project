@@ -16,7 +16,9 @@ Player::~Player()
 
 void Player::update()
 {
+    RecordPosition();
     DetectInput();
+    DetectMovement();
 }
 void Player::DetectInput()
 {

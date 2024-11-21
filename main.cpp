@@ -22,7 +22,7 @@ int main()
         BeginMode2D(camera.GetCamera());
         player.draw();
         EndMode2D();
+
         EndDrawing();
-        
     }
 }
