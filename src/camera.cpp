@@ -7,8 +7,8 @@
 PlayerCamera::PlayerCamera(Entity& target)
 {
     TargetEntity = &target;
-    SetOffset(TargetEntity->GetPosition());
-    camera.target = TargetEntity->GetPosition();
+    SetOffset({WINDOW_WIDTH/2, WINDOW_HEIGHT/2});
+    camera.target = camera.target = TargetEntity->GetPosition();
     SetRotation(0);
     SetZoom(1);
 }
@@ -58,9 +58,28 @@ float PlayerCamera::GetZoom()
 void PlayerCamera::update()
 {
     //camera.target = TargetEntity->GetPosition();
-    if(int(fabs(camera.target.x - TargetEntity->GetPosition().x)) >= WINDOW_WIDTH/2)
+    if(int(fabs(camera.target.x - TargetEntity->GetPosition().x)) >= 600)
     {
-        camera.target.x += TargetEntity->GetSpeed();
+        if(camera.target.x < TargetEntity->GetPosition().x)
+        {
+            camera.target.x += TargetEntity->GetSpeed();
+        }
+        else if(camera.target.x > TargetEntity->GetPosition().x)
+        {
+            camera.target.x -= TargetEntity->GetSpeed();
+        }
+    }
+
+    if(int(fabs(camera.target.y - TargetEntity->GetPosition().y)) >= 300)
+    {
+        if(camera.target.y < TargetEntity->GetPosition().y)
+        {
+            camera.target.y += TargetEntity->GetSpeed();
+        }
+        else if(camera.target.y > TargetEntity->GetPosition().y)
+        {
+            camera.target.y -= TargetEntity->GetSpeed();
+        }
     }
 
 
