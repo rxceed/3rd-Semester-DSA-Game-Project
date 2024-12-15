@@ -49,3 +49,10 @@ target_link_libraries(build raylib)
 include(CTest)
 enable_testing()
 
+if ( MSVC )
+    set_target_properties( build PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR} )
+    set_target_properties( build PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_SOURCE_DIR} )
+    set_target_properties( build PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_SOURCE_DIR} )
+    # etc for the other available configuration types (MinSizeRel, RelWithDebInfo)
+endif ( MSVC )
+

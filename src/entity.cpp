@@ -2,13 +2,20 @@
 #include "entity.h"
 
 //Entity Class Implementation
-Entity::Entity(float health, Vector2 position, float speed, float defense, float attack)
+Entity::Entity(float health, Vector2 position, float speed, float defense, float attack, float AttackSpeed)
 {
     SetHealth(health);
     SetPosition(position);
     SetSpeed(speed);
     SetDefense(defense);
     SetAttack(attack);
+    SetASPD(AttackSpeed);
+    PreviousPosition = position;
+}
+Entity::Entity()
+{
+
+    
 }
 Entity::~Entity()
 {
@@ -34,6 +41,10 @@ void Entity::SetDefense(float val)
 void Entity::SetAttack(float val)
 {
     attack = val;
+}
+void Entity::SetASPD(float val)
+{
+    AttackSpeed = val;
 }
 
 void Entity::draw()
@@ -61,24 +72,31 @@ float Entity::GetAttack()
 {
     return attack;
 }
-
+float Entity::GetASPD()
+{
+    return AttackSpeed;
+}
 void Entity::MoveUp()
 {
-    position.y -= speed;
+    position.y -= speed*GetFrameTime();
 }
 void Entity::MoveDown()
 {
-    position.y += speed;
+    position.y += speed*GetFrameTime();
 }
 void Entity::MoveRight()
 {
-    position.x += speed;
+    position.x += speed*GetFrameTime();
 }
 void Entity::MoveLeft()
 {
-    position.x -= speed;
+    position.x -= speed*GetFrameTime();
 }
-
+void Entity::Displace(Vector2 value)
+{
+    position.x += value.x*GetFrameTime();
+    position.y += value.y*GetFrameTime();
+}
 void Entity::RecordPosition()
 {
     PreviousPosition = position;
@@ -89,9 +107,11 @@ void Entity::DetectMovement()
     if(position.y < PreviousPosition.y)
     {
         MovingUp = true;
+        MovingDown = false;
     }
     else if(position.y > PreviousPosition.y)
     {
+        MovingUp = false;
         MovingDown = true;
     }
     else
@@ -103,9 +123,11 @@ void Entity::DetectMovement()
     if(position.x > PreviousPosition.x)
     {
         MovingRight = true;
+        MovingLeft = false;
     }
     else if(position.x < PreviousPosition.x)
     {
+        MovingRight = false;
         MovingLeft = true;
     }
     else
@@ -114,7 +136,10 @@ void Entity::DetectMovement()
         MovingLeft = false;
     }
 }
-
+int Entity::GetOrientation()
+{
+    return orientation;
+}
 bool Entity::IsMoving(int direction)
 {
     switch(direction)
@@ -174,6 +199,27 @@ bool Entity::IsMoving(int direction)
         }
         break;
     default:
+        return false;
         break;
     }
+}
+bool Entity::IsRunStateTrue()
+{
+    return RunState;
+}
+
+Rectangle Entity::GetHitbox()
+{
+    return hitbox;
+}
+
+void Entity::TakeDamage(float damage)
+{
+    float HealthAfterDamage = GetHealth() - damage*(150/(150+defense));
+    SetHealth(HealthAfterDamage);
+}
+
+void Entity::ResetAnimationTime()
+{
+    AnimationTime = 0;
 }
