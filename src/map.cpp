@@ -5,6 +5,7 @@
 #include "GameRule.h"
 #include "settings.h"
 #include "camera.h"
+#include "AttackList.h"
 #include <iostream>
 
 Map::Map()
@@ -12,11 +13,7 @@ Map::Map()
     camera = PlayerCamera::PlayerCamera(entity.player);
     for(int i = 0; i < 1000; i++)
     { 
-        //srand(i);
-        //std::cout<<(rand()-RAND_MAX/2)%10000<<std::endl;
-        tree.push_back(Tree(Vector2{float((rand()-RAND_MAX/2)%10000), float((rand()-RAND_MAX/2)%10000)}));
-        //std::cout<<(rand()-RAND_MAX/2)%10000<<std::endl;
-        
+        tree.push_back(Tree(Vector2{float((rand()-RAND_MAX/2)%5000), float((rand()-RAND_MAX/2)%5000)}));
     }
 }
 Map::~Map()
@@ -56,6 +53,7 @@ void Map::draw()
             }
         }
     }
+    //DrawText("GAME OVER", GetScreenToWorld2D({WINDOW_WIDTH/2, 0}, camera.GetCamera()).x-TextLength("GAME OVER")/2.0f, GetScreenToWorld2D({0, WINDOW_HEIGHT/2}, camera.GetCamera()).x, 50, RED);
 }
 void Map::DrawGrid()
 {
@@ -72,16 +70,114 @@ void Map::update()
 {
     entity.player.update();
     
-    for(int i = 0; i < entity.EnemyList_Orc.GetSize(); i++)
+    if(rand()%25 == 5)
     {
-        entity.EnemyList_Orc.GetNode(i+1)->data.update();
-    }  
+        entity.SpawnOrc({float((rand()-RAND_MAX/2)%2000), float((rand()-RAND_MAX/2)%2000)});
+    }
+    
     //Tree collision
     for(int i = 0; i < 1000; i++)
     { 
         tree[i].collision(entity);
     }
     camera.update();
+
+    //Attack related
+    //Plyer attack
+    if(entity.player.GetAttackState())
+    {
+        for(int i = 0; i < entity.EnemyList_Orc.GetSize(); i++)
+        {
+            entity.player.UpdateMelee(entity.EnemyList_Orc.GetNode(i+1)->data);
+        }
+    }
+    else
+    {
+        for(int i = 0; i < entity.EnemyList_Orc.GetSize(); i++)
+        {
+            entity.EnemyList_Orc.GetNode(i+1)->data.SetHasMeleeBeenHit(false);
+        }
+    }
+    
+    //Enemy Movement
+    for(int i = 0; i < entity.EnemyList_Orc.GetSize(); i++)
+    {
+        entity.EnemyList_Orc.GetNode(i+1)->data.RecordPosition();
+    }
+    for(int i = 0; i < entity.EnemyList_Orc.GetSize(); i++)
+    {
+        if(entity.EnemyList_Orc.GetNode(i+1)->data.IsAlive())
+        {
+            if(entity.EnemyList_Orc.GetNode(i+1)->data.GetPosition().x < entity.player.GetPosition().x-30)
+            {
+                entity.EnemyList_Orc.GetNode(i+1)->data.MoveRight();
+            }
+            else if(entity.EnemyList_Orc.GetNode(i+1)->data.GetPosition().x > entity.player.GetPosition().x+30)
+            {
+                entity.EnemyList_Orc.GetNode(i+1)->data.MoveLeft();
+            }
+            if(entity.EnemyList_Orc.GetNode(i+1)->data.GetPosition().y < entity.player.GetPosition().y-30)
+            {
+                entity.EnemyList_Orc.GetNode(i+1)->data.MoveDown();
+            }
+            else if(entity.EnemyList_Orc.GetNode(i+1)->data.GetPosition().y > entity.player.GetPosition().y+30)
+            {
+                entity.EnemyList_Orc.GetNode(i+1)->data.MoveUp();
+            }
+        }
+    }
+    //enemyupdate
+    for(int i = 0; i < entity.EnemyList_Orc.GetSize(); i++)
+    {
+        entity.EnemyList_Orc.GetNode(i+1)->data.DetectMovement();
+        entity.EnemyList_Orc.GetNode(i+1)->data.update();
+    }
+    
+    for(int i = 0; i < entity.EnemyList_Orc.GetSize(); i++)
+    {
+        if(CheckCollisionRecs(entity.EnemyList_Orc.GetNode(i+1)->data.GetHitbox(), entity.player.GetHitbox()))
+        {
+            entity.EnemyList_Orc.GetNode(i+1)->data.SetAttackState(true);
+        }
+    }
+
+    for(int i = 0; i < entity.EnemyList_Orc.GetSize(); i++)
+    {
+        if(entity.EnemyList_Orc.GetNode(i+1)->data.GetAttackState())
+        {
+            entity.EnemyList_Orc.GetNode(i+1)->data.UpdateMelee(entity.player);
+        }
+        else
+        {
+            entity.player.SetHasMeleeBeenHit(false);
+        }
+    }
+
+    if(entity.player.GetAttackState())
+    {
+        for(int i = 0; i < entity.EnemyList_Orc.GetSize(); i++)
+        {
+            entity.player.UpdateMelee(entity.EnemyList_Orc.GetNode(i+1)->data);
+        }
+    }
+    else
+    {
+        for(int i = 0; i < entity.EnemyList_Orc.GetSize(); i++)
+        {
+            entity.EnemyList_Orc.GetNode(i+1)->data.SetHasMeleeBeenHit(false);
+        }
+    }
+
+    //Deletion
+    for(int i = 0; i < entity.EnemyList_Orc.GetSize(); i++)
+    {
+        if(entity.EnemyList_Orc.GetNode(i+1)->data.IsDespawned())
+        {
+            entity.EnemyList_Orc.Delete(i+1);
+            break;
+        }
+    }
+    
 }
 
 EntityList Map::GetEntityList()
@@ -91,4 +187,22 @@ EntityList Map::GetEntityList()
 PlayerCamera Map::GetCamera()
 {
     return camera;
+}
+
+bool Map::GetPlayerState()
+{
+    if(entity.player.IsAlive())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void Map::ResetMap()
+{
+    entity = EntityList::EntityList();
+    camera = PlayerCamera::PlayerCamera(entity.player);
 }

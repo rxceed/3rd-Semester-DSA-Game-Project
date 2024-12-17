@@ -28,7 +28,10 @@ class Object
 
     Vector2 GetPosition();
 
+    Rectangle GetHitbox();
+
     void SetPosition(Vector2 _position);
+
     void draw();
 
 };

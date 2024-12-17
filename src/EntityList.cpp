@@ -4,23 +4,10 @@
 #include "LinkedList.h"
 #include <iostream>
 
-/*
-EnemyOrcNode::EnemyOrcNode(Orc entity_):Node()
-{
-    entity = entity_;
-}
-EnemyOrcNode::~EnemyOrcNode()
-{
-
-}*/
-
 EntityList::EntityList()
 {
     player = Player::Player({400,400});
     EnemyList_Orc = LinkedList<Orc>::LinkedList();
-    SpawnOrc({100, 100});
-    SpawnOrc({100, 200});
-    //SpawnOrc({100, 300});
 }
 EntityList::~EntityList()
 {

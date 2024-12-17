@@ -105,6 +105,7 @@ template<class T> class LinkedList
         if(head->IsTail)
         {
             IsEmpty = true;
+            head = nullptr;
         }
         else
         {
@@ -140,9 +141,13 @@ template<class T> class LinkedList
                 if(i == index-2)
                 {
                     TempNode = CurrentNode;
+                    CurrentNode = CurrentNode->next;
+                    TempNode->next = CurrentNode;
                 }
-                CurrentNode = CurrentNode->next;
-                TempNode->next = CurrentNode;
+                else
+                {
+                    CurrentNode = CurrentNode->next;
+                }            
             }
         }
         //delete TempNode->next;
@@ -176,16 +181,6 @@ template<class T> class LinkedList
                 CurrentNode = CurrentNode->next;
             }   
         }
-        /*
-        while(!CurrentNode->IsTail)
-        {
-            size++;
-            CurrentNode = CurrentNode->next;
-            if(CurrentNode == NULL)
-            {
-                break;
-            }
-        }*/
         return size;
     }
 };

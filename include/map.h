@@ -36,6 +36,10 @@ class Map
     EntityList GetEntityList();
     PlayerCamera GetCamera();
 
+    bool GetPlayerState();
+
+    void ResetMap();
+
 
 };
 

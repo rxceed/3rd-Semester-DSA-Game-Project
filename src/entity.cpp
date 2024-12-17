@@ -11,6 +11,8 @@ Entity::Entity(float health, Vector2 position, float speed, float defense, float
     SetAttack(attack);
     SetASPD(AttackSpeed);
     PreviousPosition = position;
+
+    MeleeHasBeenHit = false;
 }
 Entity::Entity()
 {
@@ -75,6 +77,14 @@ float Entity::GetAttack()
 float Entity::GetASPD()
 {
     return AttackSpeed;
+}
+bool Entity::IsAlive()
+{
+    return alive;
+}
+bool Entity::IsDespawned()
+{
+    return despawn;
 }
 void Entity::MoveUp()
 {
@@ -206,6 +216,55 @@ bool Entity::IsMoving(int direction)
 bool Entity::IsRunStateTrue()
 {
     return RunState;
+}
+bool Entity::GetAttackState()
+{
+    return AttackState;
+}
+void Entity::SetAttackState(bool var)
+{
+    if(var)
+    {
+        AttackState = true;
+    }
+    else
+    {
+        
+        AttackState = false;
+    }
+    
+}
+bool Entity::HasAttackUpdateRan()
+{
+    return AttackUpdateRun;
+}
+void Entity::SetAttackUpdateRun(bool var)
+{
+    if(var)
+    {
+        AttackUpdateRun = true;
+    }
+    else
+    {
+        AttackUpdateRun = false;
+    }
+    
+}
+bool Entity::HasMeleeBeenHit()
+{
+    return MeleeHasBeenHit;
+}
+void Entity::SetHasMeleeBeenHit(bool var)
+{
+    if(var)
+    {
+        MeleeHasBeenHit = true;
+    }
+    else
+    {
+        MeleeHasBeenHit = false;
+    }
+    
 }
 
 Rectangle Entity::GetHitbox()

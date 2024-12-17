@@ -4,6 +4,7 @@
 #include "raylib.h"
 #include "entity.h"
 
+/*
 class Melee
 {
     protected:
@@ -36,7 +37,7 @@ class PlayerAttack:public Melee
     ~PlayerAttack();
     void update();
 };
-
+*/
 
 
 

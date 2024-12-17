@@ -2,6 +2,7 @@
 #include "entity.h"
 #include "AttackList.h"
 
+/*
 Melee::Melee()
 {
 
@@ -44,12 +45,19 @@ void Melee::StartAttack()
         active = true;
     }
 }
+void Melee::EndAttack()
+{
+    if(IsActive)
+    {
+        active = false;
+    }
+    AttackTimerCount = 0;
+}
 
 void Melee::DebugDraw()
 {
     DrawRectangleRec(hitbox, RED);
 }
-
 
 PlayerAttack::PlayerAttack(Player player)
 {
@@ -65,7 +73,11 @@ void PlayerAttack::update()
 {
     if(IsActive())
     {
-
+        AttackTimerCount += GetFrameTime();
+        if(AttackTimerCount >= CasterEntity->GetASPD())
+        {
+            EndAttack();
+        }
     }
 
     if(CasterEntity->GetOrientation() == RIGHT)
@@ -77,3 +89,4 @@ void PlayerAttack::update()
         hitbox = {CasterEntity->GetPosition().x-hitbox.width, CasterEntity->GetHitbox().y, 80, CasterEntity->GetHitbox().height};
     }
 }
+*/

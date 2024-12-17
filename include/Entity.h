@@ -27,15 +27,25 @@ protected:
     bool MovingDown = false;
     bool MovingLeft = false;
     bool MovingRight = false;
+    bool AllowMovement = true;
 
     bool alive = true;
+    bool despawn = false;
+
+    float DespawnCounter = 0;
 
     bool RunState = false;
+    bool AttackState = false;
+    bool AttackUpdateRun = false;
+    float AttackTime = 0;
 
     Rectangle hitbox;
     Rectangle TextureFrame;
     Rectangle DestFrame;
     Vector2 CenterPoint;
+
+    Rectangle MeleeAttackHitbox;
+    bool MeleeHasBeenHit;
 
     int orientation;
     
@@ -55,6 +65,8 @@ public:
     void SetDefense(float value);
     void SetAttack(float value);
     void SetASPD(float value);
+    bool IsAlive();
+    bool IsDespawned();
     void draw();
 
     float GetHealth();
@@ -77,6 +89,13 @@ public:
 
     bool IsMoving(int direction);   //return true if entity is moving in the specified direction
     bool IsRunStateTrue();
+    bool GetAttackState();
+    void SetAttackState(bool var);
+    
+    bool HasMeleeBeenHit();
+    bool HasAttackUpdateRan();
+    void SetAttackUpdateRun(bool var);
+    void SetHasMeleeBeenHit(bool val);
 
     Rectangle GetHitbox();
 
@@ -97,15 +116,14 @@ class Player:public Entity
         Texture2D attack1;
         Texture2D attack2;
         Texture2D attack3;
+        Texture2D death;
     };
     enum TextureListIndex
     {
-        IDLE, WALK, RUN, ATTACK1, ATTACK2, ATTACK3
+        IDLE, WALK, RUN, ATTACK1, ATTACK2, ATTACK3, DEAD
     };
 
     TextureList tex_list;
-
-    //PlayerAttack action_attack;
 
     public:
     Player(Vector2 position);
@@ -116,6 +134,8 @@ class Player:public Entity
     void UpdateTexture();
     void UpdateFrame();
 
+    void UpdateMelee(Entity &target);
+
     void draw();
 };
 
@@ -124,6 +144,9 @@ class Enemy:public Entity
     protected:
     Rectangle DetectionRadiusIdle;
     Rectangle DetectionRadiusChasing;
+    Rectangle DetectionRadius;
+
+    Vector2 MovementTarget;
 
     bool wandering = false;
     bool chasing = false;
@@ -135,6 +158,7 @@ class Enemy:public Entity
     ~Enemy();
 
     void UpdateWander();
+    Vector2 GetMovementTarget();
 
     void draw();
 };
@@ -149,10 +173,11 @@ class Orc:public Enemy
         Texture2D walk;
         Texture2D attack1;
         Texture2D attack2;
+        Texture2D death;
     };
     enum TextureListIndex
     {
-        IDLE, WALK, ATTACK1, ATTACK2
+        IDLE, WALK, ATTACK1, ATTACK2, DEAD
     };
 
     TextureList tex_list;
@@ -164,6 +189,9 @@ class Orc:public Enemy
     void update();
     void UpdateTexture();
     void UpdateFrame();
+    void UpdateMelee(Entity &target);
+
+    void DetectPlayer(Player *player);
 };
 
 

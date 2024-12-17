@@ -33,6 +33,10 @@ void Object::draw()
     DrawTexturePro(texture, TextureFrame, DestFrame, {DestFrame.width/2.0f, DestFrame.height/2.0f}, 0, WHITE);
     
 }
+Rectangle Object::GetHitbox()
+{
+    return hitbox;
+}
 
 
 Tile::Tile(Vector2 _position):Object(_position)
@@ -91,7 +95,7 @@ Tree::~Tree()
 void Tree::collision(EntityList &entity)
 {
 
-    if(CheckCollisionRecs(hitbox, entity.player.GetHitbox()))
+    if(CheckCollisionRecs(hitbox, entity.player.GetHitbox()) && entity.player.IsAlive())
     {
         std::cout<<"collision"<<std::endl;
         if(entity.player.GetPosition().x < hitbox.x && entity.player.GetPosition().y > hitbox.y && entity.player.GetPosition().y < hitbox.y+hitbox.height)
